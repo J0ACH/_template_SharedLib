@@ -17,7 +17,7 @@ ENDMACRO (TODAY)
 
 FUNCTION(RegPackage PackageName PackageConfig_Dir)
 
-	SET (PKGDIR "${PackageConfig_Dir}/cmake/${CMAKE_CONFIGURATION_TYPES}")
+	SET (PKGDIR "${PackageConfig_Dir}/cmake")
 
 	INCLUDE(CMakePackageConfigHelpers)
 
@@ -29,7 +29,7 @@ FUNCTION(RegPackage PackageName PackageConfig_Dir)
 	)
 
 	EXPORT(TARGETS ${PackageName}
-		FILE ${PKGDIR}/${PackageName}Targets.cmake
+		FILE ${PKGDIR}/${CMAKE_CONFIGURATION_TYPES}/${PackageName}Targets.cmake
 	)
 
 	MESSAGE(STATUS "RegPackage")
@@ -48,7 +48,7 @@ FUNCTION(RegPackage PackageName PackageConfig_Dir)
 	if (WIN32)
 		install (CODE
 		"execute_process (
-			COMMAND reg add \"HKCU\\\\Software\\\\Kitware\\\\CMake\\\\Packages\\\\${PackageName}\" /v \"${CMAKE_CONFIGURATION_TYPES}\" /d \"${PKGDIR}\" /t REG_SZ /f
+			COMMAND reg add \"HKCU\\\\Software\\\\Kitware\\\\CMake\\\\Packages\\\\${PackageName}\" /v \"${PackageName}\" /d \"${PKGDIR}\" /t REG_SZ /f
 			RESULT_VARIABLE RT
 			ERROR_VARIABLE  ERR
 			OUTPUT_QUIET
