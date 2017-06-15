@@ -1,23 +1,8 @@
 MESSAGE(STATUS "RegPackage")
 
-MACRO (TODAY RESULT)
-    IF (WIN32)
-        EXECUTE_PROCESS(COMMAND "cmd" " /C date /T" OUTPUT_VARIABLE ${RESULT})
-        string(REGEX REPLACE "(..)/(..)/..(..).*" "\\1/\\2/\\3" ${RESULT} ${${RESULT}})
-    ELSEIF(UNIX)
-        EXECUTE_PROCESS(COMMAND "date" "+%d/%m/%Y" OUTPUT_VARIABLE ${RESULT})
-        string(REGEX REPLACE "(..)/(..)/..(..).*" "\\1/\\2/\\3" ${RESULT} ${${RESULT}})
-    ELSE (WIN32)
-        MESSAGE(SEND_ERROR "date not implemented")
-        SET(${RESULT} 000000)
-    ENDIF (WIN32)
-ENDMACRO (TODAY)
-
-
-
 FUNCTION(RegPackage PackageName PackageConfig_Dir)
 
-	SET (PKGDIR "${PackageConfig_Dir}/cmake")
+	SET(PKGDIR "${PackageConfig_Dir}/cmake")
 
 	INCLUDE(CMakePackageConfigHelpers)
 
@@ -36,14 +21,7 @@ FUNCTION(RegPackage PackageName PackageConfig_Dir)
 	MESSAGE(STATUS "PackageName: " ${target})
 	MESSAGE(STATUS "PackageConfig_Dir: " ${PackageConfig_Dir})
 
-	#SET (PKGDIR "${CMAKE_INSTALL_PREFIX}/${INSTALL_CONFIG_DIR}")
-	#SET (PKGUID "${TOPLEVEL_PROJECT_PACKAGE_UID}")
-	#SET (PKGUID "aaaa")
-
 	MESSAGE(STATUS "CMAKE_CONFIGURATION_TYPES : " ${CMAKE_CONFIGURATION_TYPES})
-
-	#TODAY(RESULT)
-	#message(STATUS "Compilation date = ${RESULT}")
 
 	if (WIN32)
 		install (CODE
