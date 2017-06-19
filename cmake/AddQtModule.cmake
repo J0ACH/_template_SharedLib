@@ -21,7 +21,7 @@ FUNCTION(QT_ADDMODULE TARGET MODULE)
 	MESSAGE(STATUS "QT_DLL_DIR: " ${QT_DLL_DIR} )
 	INSTALL(
 		FILES  ${QT_DLL_DIR}/../plugins/platforms/qwindows.dll
-		DESTINATION install/plugins/platforms
+		DESTINATION install/platforms
 	)
 
 	MESSAGE(STATUS "Qt5${MODULE}_LIBRARIES: " ${module_LIBRARIES})
