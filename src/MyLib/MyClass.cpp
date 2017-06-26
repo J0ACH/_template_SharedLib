@@ -4,7 +4,7 @@ namespace MyNamespace
 {
 	MyClass::MyClass(QWidget *parent) : QWidget(parent)
 	{
-		qDebug("MyClass new object");
+		qDebug("Ma draha Barboro, miluji te");
 		this->show();
 	}
 	MyClass::~MyClass()
