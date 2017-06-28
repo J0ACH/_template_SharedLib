@@ -50,6 +50,6 @@ INSTALL(TARGETS ${CMAKE_PROJECT_NAME}
 
 # PACKAGE SETUP ###################################################
 
-RegPackage(${CMAKE_PROJECT_NAME} ${BUILD_DIR})
+RegPackage(${CMAKE_PROJECT_NAME})
 
 

@@ -40,11 +40,15 @@ FUNCTION(InitCofigFile Target)
 	FILE(WRITE ${CurrentDir}/${Target}Config.cmake.in ${ConfigTxt})
 ENDFUNCTION(InitCofigFile)
 
-FUNCTION(RegPackage Target Package_Config_Dir)
+FUNCTION(RegPackage Target)
+
+	SET(BUILD_DIR ${CMAKE_SOURCE_DIR}/build)
+	SET(CONFIG_DIR ${BUILD_DIR}/lib/${CMAKE_CONFIGURATION_TYPES}/cmake)
+	SET(INSTALL_DIR ${BUILD_DIR}/install)
 
 	#STRING(TOUPPER ${CMAKE_CONFIGURATION_TYPES} ConfigType)
 	MESSAGE(STATUS "RegPackage macro for ${Target} init")
-	MESSAGE(STATUS "\t - Package_Config_Dir: ${Package_Config_Dir}")
+	MESSAGE(STATUS "\t - PKG_INSTALL_DIR: ${INSTALL_DIR}")
 
 	InitCofigFile(${Target})
 	#SET(PKG_CMAKE_DIR ${Package_Build_Dir}/cmake)
@@ -63,17 +67,40 @@ FUNCTION(RegPackage Target Package_Config_Dir)
 	CONFIGURE_PACKAGE_CONFIG_FILE(
 		${CMAKE_SOURCE_DIR}/src/${Target}Config.cmake.in
 		#${PACKAGE_CONFIG_DIR}/${CMAKE_PROJECT_NAME}Config.cmake
-		${Package_Config_Dir}/${Target}Config.cmake
-		INSTALL_DESTINATION ${Package_Config_Dir}/install
+		${CONFIG_DIR}/${Target}Config.cmake
+		INSTALL_DESTINATION ${INSTALL_DIR}
 		#PATH_VARS BUILD_INSTALL_DIR
 	)
 	
 	EXPORT(TARGETS ${Target}
 		#FILE ${PACKAGE_CONFIG_DIR}/${CMAKE_PROJECT_NAME}Targets.cmake
-		FILE ${Package_Config_Dir}/lib/${CMAKE_CONFIGURATION_TYPES}/${Target}Targets.cmake
+		FILE ${CONFIG_DIR}/${Target}Targets.cmake
 	)
 
+	INSTALL(
+		FILES 
+			${CONFIG_DIR}/${Target}Config.cmake
+			#${CONFIG_DIR}/${Target}Targets.cmake
+		DESTINATION install
+		CONFIGURATIONS Release
+	)
+
+	if (WIN32)
+		INSTALL (CODE
+			"execute_process (
+				COMMAND reg add \"HKCU\\\\Software\\\\Kitware\\\\CMake\\\\Packages\\\\${Target}\" /v \"Release\" /d \"${INSTALL_DIR}\" /t REG_SZ /f
+				RESULT_VARIABLE RT
+				ERROR_VARIABLE  ERR
+				OUTPUT_QUIET
+			)"
+		)
+	endif (WIN32)
+
+	MESSAGE(STATUS "RegPackage macro done...\n")
 	
+ENDFUNCTION(RegPackage)
+
+
 	#EXPORT(PACKAGE ${CMAKE_PROJECT_NAME})
 
 
@@ -124,7 +151,5 @@ FUNCTION(RegPackage Target Package_Config_Dir)
 #		)
 #	endif ()
 
-MESSAGE(STATUS "RegPackage macro done...\n")
-	
-ENDFUNCTION(RegPackage)
+
 
