@@ -27,13 +27,15 @@ FUNCTION(InitCofigFile Target)
 		"SET(@PROJECT_NAME@_INSTALL_DIR @BUILD_INSTALL_DIR@)"
 		"MESSAGE(STATUS \"@PROJECT_NAME@_INSTALL_DIR: @BUILD_INSTALL_DIR@\")\n"
 
+		"INSTALL(DIRECTORY \${@PROJECT_NAME@_INSTALL_DIR}/ DESTINATION install)"
+
 		"MESSAGE(STATUS \"@PROJECT_NAME@ package done...\\n\")"
 	)
 
 	SET(ConfigTxt "") 
-	MESSAGE(STATUS "\t - ConfigTxt:")
+	#MESSAGE(STATUS "\t - ConfigTxt:")
 	FOREACH(oneLine ${ConfigLines})
-	 	MESSAGE(STATUS "\t\t - " ${oneLine})
+	 	#MESSAGE(STATUS "\t\t - " ${oneLine})
 		SET(ConfigTxt "${ConfigTxt} ${oneLine} \n")
 	ENDFOREACH(oneLine)
 	
@@ -84,26 +86,7 @@ FUNCTION(RegPackage Target)
 			MESSAGE (STATUS "Register: Failed to add registry entry: ${ERR}")
 		ENDIF ()
 	ENDIF (WIN32)
-
-	#INSTALL(
-	#	FILES 
-	#		${CONFIG_DIR}/${Target}Config.cmake
-	#		#${CONFIG_DIR}/${Target}Targets.cmake
-	#	DESTINATION install
-	#	CONFIGURATIONS Release
-	#)
-
-	#if (WIN32)
-	#	INSTALL (CODE
-	#		"execute_process (
-	#			COMMAND reg add \"HKCU\\\\Software\\\\Kitware\\\\CMake\\\\Packages\\\\${Target}\" /v \"Release\" /d \"${INSTALL_DIR}\" /t REG_SZ /f
-	#			RESULT_VARIABLE RT
-	#			ERROR_VARIABLE  ERR
-	#			OUTPUT_QUIET
-	#		)"
-	#	)
-	#endif (WIN32)
-
+	
 	MESSAGE(STATUS "RegPackage macro done...\n")
 	
 ENDFUNCTION(RegPackage)

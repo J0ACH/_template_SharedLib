@@ -1,5 +1,5 @@
 
-#use like: QtLink(${CMAKE_PROJECT_NAME} Core Widgets)
+#use like: QtLink(target_library Core Widgets)
 
 FUNCTION (QtLink Target)
 
@@ -23,23 +23,29 @@ FUNCTION (QtLink Target)
 		ENDFOREACH(onePath)
 		MESSAGE(STATUS "\t\t - ${oneComponent} LOCATION: ${COMPONENT_LOCATION}")
 
-		ADD_CUSTOM_COMMAND(TARGET ${Target}
-			POST_BUILD
-			COMMAND ${CMAKE_COMMAND} -E copy_if_different
-			${COMPONENT_LOCATION} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${ConfigType}
-		)
+		#ADD_CUSTOM_COMMAND(TARGET ${Target}
+		#	POST_BUILD
+		#	COMMAND ${CMAKE_COMMAND} -E copy_if_different
+		#	${COMPONENT_LOCATION} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${ConfigType}
+		#)
 		
 		INSTALL(FILES ${COMPONENT_LOCATION} DESTINATION install)	
 
 	ENDFOREACH(oneComponent)
 
-	GET_FILENAME_COMPONENT(QT_BIN_DIR ${COMPONENT_LOCATION} PATH)
-	#MESSAGE(STATUS "QT_BIN_DIR: " ${QT_BIN_DIR} )
-	INSTALL(
-		FILES  ${QT_BIN_DIR}/../plugins/platforms/qwindows.dll
-		DESTINATION install/platforms
-	)
+	IF(WIN32)
+		GET_FILENAME_COMPONENT(QT_BIN_DIR ${COMPONENT_LOCATION} PATH)
+		#MESSAGE(STATUS "QT_BIN_DIR: " ${QT_BIN_DIR} )
+		INSTALL(
+			FILES  ${QT_BIN_DIR}/../plugins/platforms/qwindows.dll
+			DESTINATION install/platforms
+		)
+	ENDIF(WIN32)
 
 	MESSAGE(STATUS "QtLink macro done...\n")
 
 ENDFUNCTION(QtLink)
+
+FUNCTION (TestPozdrav)
+	MESSAGE(STATUS "QtLink macro pozdrav...\n")
+ENDFUNCTION (TestPozdrav)
