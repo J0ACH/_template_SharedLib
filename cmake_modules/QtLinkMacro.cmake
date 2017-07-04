@@ -4,6 +4,7 @@
 FUNCTION (QtLink Target)
 
 	SET(QtComponents ${ARGN})
+	MESSAGE(STATUS "CMAKE_CONFIGURATION_TYPES :" ${CMAKE_CONFIGURATION_TYPES})
 	STRING(TOUPPER ${CMAKE_CONFIGURATION_TYPES} ConfigType)
 	MESSAGE(STATUS "QtLink macro for ${Target} init [ConfigType: ${ConfigType}]")
 		
