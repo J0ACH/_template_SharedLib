@@ -42,11 +42,11 @@ FUNCTION(InitCofigFile Target)
 	FILE(WRITE ${CurrentDir}/${Target}Config.cmake.in ${ConfigTxt})
 ENDFUNCTION(InitCofigFile)
 
-FUNCTION(RegPackage Target)
+FUNCTION(RegPackage Target Build_DIR)
 
-	SET(BUILD_DIR ${CMAKE_SOURCE_DIR}/build)
-	SET(CONFIG_DIR ${BUILD_DIR}/lib/${CMAKE_CONFIGURATION_TYPES}/cmake)
-	SET(INSTALL_DIR ${BUILD_DIR}/install)
+	#SET(BUILD_DIR ${CMAKE_SOURCE_DIR}/build)
+	SET(CONFIG_DIR ${Build_DIR}/lib/${CMAKE_CONFIGURATION_TYPES}/cmake)
+	SET(INSTALL_DIR ${Build_DIR}/install)
 
 	#STRING(TOUPPER ${CMAKE_CONFIGURATION_TYPES} ConfigType)
 	MESSAGE(STATUS "RegPackage macro for ${Target} init")
