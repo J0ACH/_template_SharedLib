@@ -50,9 +50,9 @@ install(TARGETS ${CMAKE_PROJECT_NAME}
 
 # PACKAGE SETUP ###################################################
 
-RegPackage(${CMAKE_PROJECT_NAME} ${CMAKE_INSTALL_PREFIX})
+#RegPackage(${CMAKE_PROJECT_NAME} ${CMAKE_INSTALL_PREFIX})
 
-#[[
+
 
 include(CMakePackageConfigHelpers)
 
@@ -67,5 +67,6 @@ export(
 	FILE ${CMAKE_INSTALL_PREFIX}/lib/cmake/${CMAKE_PROJECT_NAME}Targets.cmake
 )
 
-#export(PACKAGE ${CMAKE_PROJECT_NAME})
-#]]
+export(PACKAGE ${CMAKE_PROJECT_NAME})
+
+
