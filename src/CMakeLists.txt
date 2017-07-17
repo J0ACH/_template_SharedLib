@@ -1,5 +1,4 @@
 
-include(RegPackageMacro)
 
 find_package(Qt5 COMPONENTS Core Widgets Gui REQUIRED)
 add_subdirectory(MyLib)
@@ -43,12 +42,13 @@ install(
 
 # PACKAGE SETUP ###################################################
 
+include(RegPackageMacro)
 #RegPackage(${CMAKE_PROJECT_NAME} ${CMAKE_INSTALL_PREFIX})
 
 
+include(CMakePackageConfigHelpers)
 #[[
 
-include(CMakePackageConfigHelpers)
 
 configure_package_config_file(
 	${CMAKE_SOURCE_DIR}/src/${CMAKE_PROJECT_NAME}Config.cmake.in
@@ -63,5 +63,16 @@ export(
 
 export(PACKAGE ${CMAKE_PROJECT_NAME})
 
+
+write_basic_package_version_file(${CMAKE_INSTALL_PREFIX}/FooConfigVersion.cmake
+	VERSION ${PROJECT_VERSION}
+	COMPATIBILITY SameMajorVersion 
+)
 #]]
 
+include(RegisterModule)
+PackageAdd(
+	TARGETS ${CMAKE_PROJECT_NAME}
+	VERSION ${PROJECT_VERSION}
+	PATH ${CMAKE_INSTALL_PREFIX}/cmake
+)

@@ -154,3 +154,92 @@ FUNCTION (RegisterGet)
 	
 	message(STATUS "RegisterGet macro done...\n")
 ENDFUNCTION (RegisterGet)
+
+################################################################################################
+
+FUNCTION (InitTargetFile)
+
+	message(STATUS "")	
+	message(STATUS "Register InitTargetFile macro init")
+
+	set(oneValueArgs PATH TARGET)
+	set(multiValueArgs)
+	set(options VERBATIM)
+
+    cmake_parse_arguments( InitTargetFile "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
+
+	RegisterCheckFunctionRequiredKeys(
+		FUNCTION InitTargetFile
+		KEYS TARGET PATH
+		VERBATIM TRUE
+	)
+
+	export(
+		TARGETS ${InitTargetFile_TARGET}		
+		FILE ${InitTargetFile_PATH}/${InitTargetFile_TARGET}Targets.cmake
+	)
+	
+	message(STATUS "Register InitTargetFile macro done...\n")
+ENDFUNCTION (InitTargetFile)
+
+################################################################################################
+
+FUNCTION (InitVersionFile)
+
+	message(STATUS "")	
+	message(STATUS "Register InitVersionFile macro init")
+
+	set(oneValueArgs PATH VERSION TARGET)
+	set(multiValueArgs)
+	set(options VERBATIM)
+
+    cmake_parse_arguments( InitVersionFile "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
+
+	RegisterCheckFunctionRequiredKeys(
+		FUNCTION InitVersionFile
+		KEYS VERSION PATH
+		VERBATIM TRUE
+	)
+	
+	include(CMakePackageConfigHelpers)
+	write_basic_package_version_file(
+		${InitVersionFile_PATH}/${InitVersionFile_TARGET}ConfigVersion.cmake
+		VERSION ${PROJECT_VERSION}
+		COMPATIBILITY SameMajorVersion 
+	)
+	
+	message(STATUS "Register InitVersionFile macro done...\n")
+ENDFUNCTION (InitVersionFile)
+
+################################################################################################
+
+function (PackageAdd)
+	message(STATUS "")	
+	message(STATUS "Register PackageTargets macro init")
+
+	set(oneValueArgs PATH VERSION)
+	set(multiValueArgs TARGETS)
+	set(options VERBATIM)
+
+    cmake_parse_arguments( PackageAdd "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
+
+	RegisterCheckFunctionRequiredKeys(
+		FUNCTION PackageAdd
+		KEYS TARGETS PATH
+		VERBATIM TRUE
+	)
+
+	foreach(oneTarget ${PackageAdd_TARGETS})
+		InitTargetFile(
+			TARGET ${oneTarget}
+			PATH ${PackageAdd_PATH}
+		)
+		InitVersionFile(
+			TARGET ${oneTarget}
+			VERSION ${PackageAdd_VERSION}
+			PATH ${PackageAdd_PATH}
+		)
+	endforeach(oneTarget)
+	
+	message(STATUS "Register PackageTargets macro done...\n")
+endfunction (PackageAdd)
