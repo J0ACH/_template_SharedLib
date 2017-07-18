@@ -1,17 +1,17 @@
 cmake_policy(SET CMP0048 NEW)
 
-PROJECT (SharedLib VERSION 0.0.1)
-CMAKE_MINIMUM_REQUIRED( VERSION 3.7.2 )
+project (SharedLib VERSION 0.0.1)
+cmake_minimum_required( VERSION 3.7.2 )
 
-MESSAGE(STATUS "")
-MESSAGE(STATUS "SharedLib config init...")
+message(STATUS "")
+message(STATUS "SharedLib config init...")
 
-SET(CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake_modules)
-SET(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
-SET(CMAKE_AUTOMOC ON)
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake_modules)
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
+set(CMAKE_AUTOMOC ON)
 
-ADD_SUBDIRECTORY(src)
+add_subdirectory(src)
 
-MESSAGE(STATUS "SharedLib version " ${PROJECT_VERSION})
+message(STATUS "SharedLib version " ${PROJECT_VERSION})
 
-MESSAGE(STATUS "SharedLib config done...\n")
+message(STATUS "SharedLib config done...\n")

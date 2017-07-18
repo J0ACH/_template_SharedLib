@@ -157,7 +157,69 @@ ENDFUNCTION (RegisterGet)
 
 ################################################################################################
 
-FUNCTION (InitTargetFile)
+function(InitConfigFile)
+
+	message(STATUS "")	
+	message(STATUS "Register InitConfigFile macro init")
+
+	set(oneValueArgs PATH TARGET)
+	set(multiValueArgs)
+	set(options VERBATIM)
+
+    cmake_parse_arguments( InitConfigFile "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
+
+	RegisterCheckFunctionRequiredKeys(
+		FUNCTION InitConfigFile
+		KEYS TARGET PATH
+		VERBATIM TRUE
+	)
+	
+	SET(CurrentDir ${CMAKE_CURRENT_LIST_DIR})
+	message(STATUS "\t - Package_Config_Dir_IN: ${CurrentDir}")
+		
+	set(ConfigLines 
+		"@PACKAGE_INIT@\n"
+
+		"MESSAGE(STATUS \"@PROJECT_NAME@ package init...\\n\")\n"
+
+		"MESSAGE(STATUS \"CMAKE_CURRENT_LIST_DIR: \${CMAKE_CURRENT_LIST_DIR}\")"
+		"INCLUDE(\${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@Targets.cmake)\n"
+		"INCLUDE(\${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@ConfigVersion.cmake)\n"
+
+		"STRING(TOUPPER \${CMAKE_CONFIGURATION_TYPES} PKGCONFIG)"
+		"MESSAGE(STATUS \"PKGCONFIG: \${PKGCONFIG}\")"
+		"GET_TARGET_PROPERTY(@PROJECT_NAME@_INCLUDE_DIRS @PROJECT_NAME@ INTERFACE_INCLUDE_DIRECTORIES)"
+		"GET_TARGET_PROPERTY(@PROJECT_NAME@_LIBRARIES @PROJECT_NAME@ IMPORTED_IMPLIB_\${PKGCONFIG})"
+		"GET_TARGET_PROPERTY(@PROJECT_NAME@_LOCATION @PROJECT_NAME@ IMPORTED_LOCATION_\${PKGCONFIG})\n"
+
+		"MESSAGE(STATUS \"@PROJECT_NAME@_LIBRARIES: \${@PROJECT_NAME@_LIBRARIES}\")"
+		"MESSAGE(STATUS \"@PROJECT_NAME@_LOCATION: \${@PROJECT_NAME@_LOCATION}\")"
+		"MESSAGE(STATUS \"@PROJECT_NAME@_INCLUDE_DIRS: \")"
+		"FOREACH(onePath \${@PROJECT_NAME@_INCLUDE_DIRS})"
+			"\tMESSAGE(STATUS \"\\t - \${onePath}\")"
+		"ENDFOREACH(onePath)\n"
+
+		"SET(@PROJECT_NAME@_INSTALL_DIR @BUILD_INSTALL_DIR@)"
+		"MESSAGE(STATUS \"@PROJECT_NAME@_INSTALL_DIR: @BUILD_INSTALL_DIR@\")\n"
+
+		#"INSTALL(DIRECTORY \${@PROJECT_NAME@_INSTALL_DIR}/ DESTINATION install)"
+
+		"MESSAGE(STATUS \"@PROJECT_NAME@ package done...\\n\")"
+	)
+
+	set(ConfigTxt "") 
+	#MESSAGE(STATUS "\t - ConfigTxt:")
+	foreach(oneLine ${ConfigLines})
+	 	#MESSAGE(STATUS "\t\t - " ${oneLine})
+		set(ConfigTxt "${ConfigTxt} ${oneLine} \n")
+	endforeach(oneLine)
+	
+	file(WRITE ${InitConfigFile_PATH}/${InitConfigFile_TARGET}Config.cmake ${ConfigTxt})
+endfunction(InitConfigFile)
+
+################################################################################################
+
+function (InitTargetFile)
 
 	message(STATUS "")	
 	message(STATUS "Register InitTargetFile macro init")
@@ -180,11 +242,11 @@ FUNCTION (InitTargetFile)
 	)
 	
 	message(STATUS "Register InitTargetFile macro done...\n")
-ENDFUNCTION (InitTargetFile)
+endfunction (InitTargetFile)
 
 ################################################################################################
 
-FUNCTION (InitVersionFile)
+function (InitVersionFile)
 
 	message(STATUS "")	
 	message(STATUS "Register InitVersionFile macro init")
@@ -209,7 +271,7 @@ FUNCTION (InitVersionFile)
 	)
 	
 	message(STATUS "Register InitVersionFile macro done...\n")
-ENDFUNCTION (InitVersionFile)
+endfunction (InitVersionFile)
 
 ################################################################################################
 
@@ -239,7 +301,16 @@ function (PackageAdd)
 			VERSION ${PackageAdd_VERSION}
 			PATH ${PackageAdd_PATH}
 		)
-	endforeach(oneTarget)
+		InitConfigFile(
+			TARGET ${oneTarget}
+			PATH ${PackageAdd_PATH}
+		)
+		RegisterAdd(
+			NAME ${oneTarget}
+			KEY Release
+			VALUE ${PackageAdd_PATH}
+		)
+	endforeach(oneTarget)	
 	
 	message(STATUS "Register PackageTargets macro done...\n")
 endfunction (PackageAdd)

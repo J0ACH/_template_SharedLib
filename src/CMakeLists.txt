@@ -42,12 +42,12 @@ install(
 
 # PACKAGE SETUP ###################################################
 
+#[[
 include(RegPackageMacro)
 #RegPackage(${CMAKE_PROJECT_NAME} ${CMAKE_INSTALL_PREFIX})
 
 
 include(CMakePackageConfigHelpers)
-#[[
 
 
 configure_package_config_file(
