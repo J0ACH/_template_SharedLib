@@ -1,6 +1,7 @@
 
 
 find_package(Qt5 COMPONENTS Core Widgets Gui REQUIRED)
+
 add_subdirectory(MyLib)
 
 add_library( ${CMAKE_PROJECT_NAME} SHARED
@@ -9,69 +10,53 @@ add_library( ${CMAKE_PROJECT_NAME} SHARED
 	${library_res}
 )
 
+set_target_properties( ${CMAKE_PROJECT_NAME}
+    PROPERTIES
+	    ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${CMAKE_INSTALL_PREFIX}/debug/lib
+		ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${CMAKE_INSTALL_PREFIX}/lib
+		LIBRARY_OUTPUT_DIRECTORY_DEBUG ${CMAKE_INSTALL_PREFIX}/debug/lib
+		LIBRARY_OUTPUT_DIRECTORY_RELEASE ${CMAKE_INSTALL_PREFIX}/lib
+		RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_INSTALL_PREFIX}/debug/bin
+		RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_INSTALL_PREFIX}/bin
+)
+
+
 add_custom_command(TARGET ${CMAKE_PROJECT_NAME}
 	POST_BUILD
-	COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_INSTALL_PREFIX}/include
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${library_hdr} ${CMAKE_INSTALL_PREFIX}/include
+		COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_INSTALL_PREFIX}/include
+		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${library_hdr} ${CMAKE_INSTALL_PREFIX}/include
 )
 
-target_include_directories(${CMAKE_PROJECT_NAME} PUBLIC 
-	${CMAKE_INSTALL_PREFIX}/include
+target_include_directories(${CMAKE_PROJECT_NAME} 
+	PRIVATE
+		${library_hdr}
+		$<TARGET_PROPERTY:Qt5::Core,INTERFACE_INCLUDE_DIRECTORIES>
+		$<TARGET_PROPERTY:Qt5::Gui,INTERFACE_INCLUDE_DIRECTORIES>
+		$<TARGET_PROPERTY:Qt5::Widgets,INTERFACE_INCLUDE_DIRECTORIES>
+	INTERFACE 
+		${CMAKE_INSTALL_PREFIX}/include
 )
 
-target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE 
-	$<TARGET_PROPERTY:Qt5::Core,INTERFACE_INCLUDE_DIRECTORIES>
-	$<TARGET_PROPERTY:Qt5::Gui,INTERFACE_INCLUDE_DIRECTORIES>
-	$<TARGET_PROPERTY:Qt5::Widgets,INTERFACE_INCLUDE_DIRECTORIES>
+target_link_libraries(${CMAKE_PROJECT_NAME} 
+	PRIVATE 
+		$<TARGET_LINKER_FILE:Qt5::Core> 
+		$<TARGET_LINKER_FILE:Qt5::Gui>
+		$<TARGET_LINKER_FILE:Qt5::Widgets>
 )
 
-target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE 
-	$<TARGET_LINKER_FILE:Qt5::Core> 
-	$<TARGET_LINKER_FILE:Qt5::Gui>
-	$<TARGET_LINKER_FILE:Qt5::Widgets>
-)
-target_link_libraries(${CMAKE_PROJECT_NAME} INTERFACE 
-	$<TARGET_LINKER_FILE:${CMAKE_PROJECT_NAME}>
-)
-
+#[[
 install(
-	TARGETS ${CMAKE_PROJECT_NAME} 
-	EXPORT ${CMAKE_PROJECT_NAME}Targets
+	TARGETS ${CMAKE_PROJECT_NAME} EXPORT MyLibraryConfig
+	#EXPORT ${CMAKE_PROJECT_NAME}Targets
 	ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
     LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
 	RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
 	#COMPONENT applications
 )
+install(EXPORT MyLibraryConfig DESTINATION share/MyLibrary/cmake)
+#]]
 
 # PACKAGE SETUP ###################################################
-
-#[[
-include(RegPackageMacro)
-#RegPackage(${CMAKE_PROJECT_NAME} ${CMAKE_INSTALL_PREFIX})
-
-
-include(CMakePackageConfigHelpers)
-
-
-configure_package_config_file(
-	${CMAKE_SOURCE_DIR}/src/${CMAKE_PROJECT_NAME}Config.cmake.in
-	${CMAKE_INSTALL_PREFIX}/lib/cmake/${CMAKE_PROJECT_NAME}Config.cmake
-	INSTALL_DESTINATION ${CMAKE_INSTALL_PREFIX}
-)
-
-export(
-	TARGETS ${CMAKE_PROJECT_NAME}		
-	FILE ${CMAKE_INSTALL_PREFIX}/lib/cmake/${CMAKE_PROJECT_NAME}Targets.cmake
-)
-
-export(PACKAGE ${CMAKE_PROJECT_NAME})
-
-
-write_basic_package_version_file(${CMAKE_INSTALL_PREFIX}/FooConfigVersion.cmake
-	VERSION ${PROJECT_VERSION}
-	COMPATIBILITY SameMajorVersion 
-)
-#]]
 
 include(RegisterModule)
 PackageAdd(
