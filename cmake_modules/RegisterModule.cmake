@@ -191,6 +191,7 @@ function(InitConfigFile)
 		"GET_TARGET_PROPERTY(@PROJECT_NAME@_INCLUDE_DIRS @PROJECT_NAME@ INTERFACE_INCLUDE_DIRECTORIES)"
 		"GET_TARGET_PROPERTY(@PROJECT_NAME@_LIBRARIES @PROJECT_NAME@ IMPORTED_IMPLIB_\${PKGCONFIG})"
 		"GET_TARGET_PROPERTY(@PROJECT_NAME@_LOCATION @PROJECT_NAME@ IMPORTED_LOCATION_\${PKGCONFIG})\n"
+		#"GET_TARGET_PROPERTY(@PROJECT_NAME@_LOCATION @PROJECT_NAME@ INTERFACE_LINK_LIBRARIES)\n"
 
 		"MESSAGE(STATUS \"@PROJECT_NAME@_LIBRARIES: \${@PROJECT_NAME@_LIBRARIES}\")"
 		"MESSAGE(STATUS \"@PROJECT_NAME@_LOCATION: \${@PROJECT_NAME@_LOCATION}\")"
@@ -198,9 +199,11 @@ function(InitConfigFile)
 		"FOREACH(onePath \${@PROJECT_NAME@_INCLUDE_DIRS})"
 			"\tMESSAGE(STATUS \"\\t - \${onePath}\")"
 		"ENDFOREACH(onePath)\n"
+		"MESSAGE(STATUS \"@PROJECT_NAME@_INCLUDE_DIRS: \")"
 
 		"SET(@PROJECT_NAME@_INSTALL_DIR @BUILD_INSTALL_DIR@)"
 		"MESSAGE(STATUS \"@PROJECT_NAME@_INSTALL_DIR: @BUILD_INSTALL_DIR@\")\n"
+		#INTERFACE_LINK_LIBRARIES
 
 		#"INSTALL(DIRECTORY \${@PROJECT_NAME@_INSTALL_DIR}/ DESTINATION install)"
 
@@ -214,7 +217,15 @@ function(InitConfigFile)
 		set(ConfigTxt "${ConfigTxt} ${oneLine} \n")
 	endforeach(oneLine)
 	
-	file(WRITE ${InitConfigFile_PATH}/${InitConfigFile_TARGET}Config.cmake ${ConfigTxt})
+	file(WRITE ${CMAKE_SOURCE_DIR}/src/${InitConfigFile_TARGET}Config.cmake.in ${ConfigTxt})
+
+	include(CMakePackageConfigHelpers)
+	configure_package_config_file(
+		${CMAKE_SOURCE_DIR}/src/${InitConfigFile_TARGET}Config.cmake.in
+		${InitConfigFile_PATH}/${InitConfigFile_TARGET}Config.cmake
+		INSTALL_DESTINATION ${InitConfigFile_PATH}
+		#PATH_VARS BUILD_INSTALL_DIR
+	)
 endfunction(InitConfigFile)
 
 ################################################################################################
