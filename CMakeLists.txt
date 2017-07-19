@@ -1,6 +1,6 @@
 cmake_policy(SET CMP0048 NEW)
 
-project (SharedLib VERSION 0.0.1)
+project (SharedLib VERSION 0.2.1)
 cmake_minimum_required( VERSION 3.7.2 )
 
 message(STATUS "")
