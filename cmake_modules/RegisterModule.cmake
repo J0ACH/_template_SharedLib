@@ -249,7 +249,7 @@ function (InitTargetFile)
 
 	export(
 		TARGETS ${InitTargetFile_TARGET}		
-		FILE ${InitTargetFile_PATH}/${InitTargetFile_TARGET}Targets.cmake
+		FILE ${InitTargetFile_PATH}/${InitTargetFile_TARGET}Config.cmake
 	)
 	
 	message(STATUS "Register InitTargetFile macro done...\n")
@@ -312,10 +312,12 @@ function (PackageAdd)
 			VERSION ${PackageAdd_VERSION}
 			PATH ${PackageAdd_PATH}
 		)
+		#[[
 		InitConfigFile(
 			TARGET ${oneTarget}
 			PATH ${PackageAdd_PATH}
 		)
+		#]]
 		RegisterAdd(
 			NAME ${oneTarget}
 			KEY Release
