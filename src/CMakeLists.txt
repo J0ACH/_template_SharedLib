@@ -12,14 +12,13 @@ add_library( ${CMAKE_PROJECT_NAME} SHARED
 
 set_target_properties( ${CMAKE_PROJECT_NAME}
     PROPERTIES
-	    ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${CMAKE_INSTALL_PREFIX}/debug/lib
 		ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${CMAKE_INSTALL_PREFIX}/lib
-		LIBRARY_OUTPUT_DIRECTORY_DEBUG ${CMAKE_INSTALL_PREFIX}/debug/lib
 		LIBRARY_OUTPUT_DIRECTORY_RELEASE ${CMAKE_INSTALL_PREFIX}/lib
-		RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_INSTALL_PREFIX}/debug/bin
 		RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_INSTALL_PREFIX}/bin
+	    ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${CMAKE_INSTALL_PREFIX}/debug/lib
+		LIBRARY_OUTPUT_DIRECTORY_DEBUG ${CMAKE_INSTALL_PREFIX}/debug/lib
+		RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_INSTALL_PREFIX}/debug/bin
 )
-
 
 add_custom_command(TARGET ${CMAKE_PROJECT_NAME}
 	POST_BUILD
@@ -27,22 +26,38 @@ add_custom_command(TARGET ${CMAKE_PROJECT_NAME}
 		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${library_hdr} ${CMAKE_INSTALL_PREFIX}/include
 )
 
-get_target_property(qtCoreInclude Qt5::Core INTERFACE_INCLUDE_DIRECTORIES) 
-get_target_property(qtGuiInclude Qt5::Gui INTERFACE_INCLUDE_DIRECTORIES) 
-get_target_property(qtWidgetsInclude Qt5::Widgets INTERFACE_INCLUDE_DIRECTORIES) 
-#get_target_property(qtWinMainInclude Qt5::WinMain INTERFACE_INCLUDE_DIRECTORIES) 
-
 target_include_directories(${CMAKE_PROJECT_NAME} 
 	PRIVATE
 		${library_hdr}
+	INTERFACE 
+		${CMAKE_INSTALL_PREFIX}/include
+)
+
+target_link_libraries(${CMAKE_PROJECT_NAME} 
+	PRIVATE 
+		Qt5::Core
+		Qt5::Gui
+		Qt5::Widgets
+)
+
+
+#[[
+# tohle je zpusob jak distribovat dependence spolu s touhle knihovnou
+
+get_target_property(qtCoreInclude Qt5::Core INTERFACE_INCLUDE_DIRECTORIES) 
+get_target_property(qtGuiInclude Qt5::Gui INTERFACE_INCLUDE_DIRECTORIES) 
+get_target_property(qtWidgetsInclude Qt5::Widgets INTERFACE_INCLUDE_DIRECTORIES) 
+
+target_include_directories(${CMAKE_PROJECT_NAME} 
+	PRIVATE
+		${library_hdr}		
+		#$<TARGET_PROPERTY:Qt5::Core,INTERFACE_INCLUDE_DIRECTORIES>
+		#$<TARGET_PROPERTY:Qt5::Gui,INTERFACE_INCLUDE_DIRECTORIES>
+		#$<TARGET_PROPERTY:Qt5::Widgets,INTERFACE_INCLUDE_DIRECTORIES>
 	PUBLIC
 		${qtCoreInclude}
 		${qtGuiInclude}
 		${qtWidgetsInclude}
-		${qtWinMainInclude}
-		#$<TARGET_PROPERTY:Qt5::Core,INTERFACE_INCLUDE_DIRECTORIES>
-		#$<TARGET_PROPERTY:Qt5::Gui,INTERFACE_INCLUDE_DIRECTORIES>
-		#$<TARGET_PROPERTY:Qt5::Widgets,INTERFACE_INCLUDE_DIRECTORIES>
 	INTERFACE 
 		${CMAKE_INSTALL_PREFIX}/include
 )
@@ -68,6 +83,7 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
 		#$<TARGET_PROPERTY:Qt5::Core,IMPORTED_IMPLIB_RELEASE>
 		
 )
+#]]
 
 #[[
 install(
