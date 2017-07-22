@@ -10,27 +10,27 @@ add_library( ${CMAKE_PROJECT_NAME} SHARED
 	${library_res}
 )
 
+string(TOUPPER ${CMAKE_CONFIGURATION_TYPES} configType)
 set_target_properties( ${CMAKE_PROJECT_NAME}
     PROPERTIES
-		ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${CMAKE_INSTALL_PREFIX}/lib
-		LIBRARY_OUTPUT_DIRECTORY_RELEASE ${CMAKE_INSTALL_PREFIX}/lib
-		RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_INSTALL_PREFIX}/bin
-	    ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${CMAKE_INSTALL_PREFIX}/debug/lib
-		LIBRARY_OUTPUT_DIRECTORY_DEBUG ${CMAKE_INSTALL_PREFIX}/debug/lib
-		RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_INSTALL_PREFIX}/debug/bin
+		ARCHIVE_OUTPUT_DIRECTORY_${configType} ${CMAKE_BINARY_DIR}/lib
+		LIBRARY_OUTPUT_DIRECTORY_${configType} ${CMAKE_BINARY_DIR}/lib
+		RUNTIME_OUTPUT_DIRECTORY_${configType} ${CMAKE_BINARY_DIR}/bin
 )
+#[[
 
 add_custom_command(TARGET ${CMAKE_PROJECT_NAME}
 	POST_BUILD
-		COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_INSTALL_PREFIX}/include
+		COMMAND ${CMAKE_COMMAND} -E make_directory include
 		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${library_hdr} ${CMAKE_INSTALL_PREFIX}/include
 )
+#]]
 
 target_include_directories(${CMAKE_PROJECT_NAME} 
 	PRIVATE
 		${library_hdr}
 	INTERFACE 
-		${CMAKE_INSTALL_PREFIX}/include
+		$<INSTALL_INTERFACE:include>
 )
 
 target_link_libraries(${CMAKE_PROJECT_NAME} 
@@ -40,6 +40,20 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
 		Qt5::Widgets
 )
 
+install(
+	FILES ${library_hdr}
+	DESTINATION include
+)
+
+install(
+	TARGETS ${CMAKE_PROJECT_NAME} 
+	EXPORT ${CMAKE_PROJECT_NAME}Config
+	ARCHIVE DESTINATION lib
+    LIBRARY DESTINATION lib
+	RUNTIME DESTINATION bin
+	#COMPONENT applications
+)
+install(EXPORT ${CMAKE_PROJECT_NAME}Config DESTINATION lib/cmake)
 
 #[[
 # tohle je zpusob jak distribovat dependence spolu s touhle knihovnou
@@ -98,10 +112,11 @@ install(EXPORT MyLibraryConfig DESTINATION install/cmake)
 #]]
 
 # PACKAGE SETUP ###################################################
-
+#[[
 include(RegisterModule)
 PackageAdd(
 	TARGETS ${CMAKE_PROJECT_NAME}
 	VERSION ${PROJECT_VERSION}
 	PATH ${CMAKE_INSTALL_PREFIX}/cmake
 )
+#]]

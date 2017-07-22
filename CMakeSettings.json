@@ -5,14 +5,14 @@
       "name": "Debug",
       "generator": "Visual Studio 15 2017 Win64",
       "configurationType": "Debug",
-      "buildRoot": "${projectDir}\\build\\cache\\${name}",
+      "buildRoot": "${projectDir}\\build\\${name}",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "-m -v:minimal",
       "ctestCommandArgs": "",
       "variables": [
         {
           "name": "CMAKE_INSTALL_PREFIX",
-          "value": "${projectDir}\\build"
+          "value": "${projectDir}\\install"
         }
       ]
     },
@@ -20,16 +20,17 @@
       "name": "Release",
       "generator": "Visual Studio 15 2017 Win64",
       "configurationType": "Release",
-      "buildRoot": "${projectDir}\\build\\cache\\${name}",
+      "buildRoot": "${projectDir}\\build\\${name}",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "-m -v:minimal",
-      "ctestCommandArgs": "",
+      "ctestCommandArgs": "",      
       "variables": [
         {
           "name": "CMAKE_INSTALL_PREFIX",
-          "value": "${projectDir}\\build"
+          "value": "${projectDir}\\install"
         }
       ]
+      
     }
   ]
 }
