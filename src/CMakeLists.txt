@@ -39,24 +39,8 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
 		Qt5::Core
 		Qt5::Gui
 		Qt5::Widgets
-)
-
-# PACKAGE SETUP ###################################################
-
-include(CMakePackageConfigHelpers)
-configure_package_config_file (
-	${CMAKE_CURRENT_SOURCE_DIR}/${CMAKE_PROJECT_NAME}Config.cmake.in
-	${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}Config.cmake
-	INSTALL_DESTINATION lib/cmake
-)
-write_basic_package_version_file(
-	${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}ConfigVersion.cmake
-	VERSION ${PROJECT_VERSION}
-	COMPATIBILITY AnyNewerVersion 
-)
-export ( 
-	TARGETS ${CMAKE_PROJECT_NAME}
-	FILE ${CMAKE_BINARY_DIR}/lib/${CMAKE_CONFIGURATION_TYPES}/${CMAKE_PROJECT_NAME}Targets.cmake 
+	INTERFACE
+		$<TARGET_LINKER_FILE:Qt5::Core>
 )
 
 # LIB INSTALL ###################################################
@@ -67,6 +51,7 @@ install(
 	ARCHIVE DESTINATION lib
     LIBRARY DESTINATION lib
 	RUNTIME DESTINATION bin
+	CONFIGURATIONS Release
 )
 install(
 	EXPORT ${CMAKE_PROJECT_NAME}Targets
@@ -83,3 +68,30 @@ install(
 	DESTINATION	lib/cmake 
 )
 
+# PACKAGE SETUP ###################################################
+
+include(CMakePackageConfigHelpers)
+configure_package_config_file (
+	${CMAKE_CURRENT_SOURCE_DIR}/${CMAKE_PROJECT_NAME}Config.cmake.in
+	${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}Config.cmake
+	INSTALL_DESTINATION lib/cmake
+)
+write_basic_package_version_file(
+	${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}ConfigVersion.cmake
+	VERSION ${PROJECT_VERSION}
+	COMPATIBILITY AnyNewerVersion 
+)
+cmake_policy(SET CMP0022 NEW)
+export ( 
+	TARGETS ${CMAKE_PROJECT_NAME}
+	#FILE ${CMAKE_BINARY_DIR}/lib/${CMAKE_CONFIGURATION_TYPES}/${CMAKE_PROJECT_NAME}Targets.cmake 
+	FILE ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}Targets.cmake 
+	EXPORT_LINK_INTERFACE_LIBRARIES
+)
+#[[
+export ( 
+	EXPORT ${CMAKE_PROJECT_NAME}Targets
+	FILE ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}Targets.cmake 
+	#EXPORT_LINK_INTERFACE_LIBRARIES
+)
+#]]
