@@ -23,14 +23,14 @@
       "buildRoot": "${projectDir}\\build",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "-m -v:minimal",
-      "ctestCommandArgs": "",      
+      "ctestCommandArgs": "",
       "variables": [
         {
           "name": "CMAKE_INSTALL_PREFIX",
           "value": "${projectDir}\\install"
         }
       ]
-      
+
     }
   ]
 }

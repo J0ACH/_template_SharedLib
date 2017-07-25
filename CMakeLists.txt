@@ -14,3 +14,5 @@ add_subdirectory(src)
 export ( PACKAGE ${CMAKE_PROJECT_NAME} ) 
 
 message(STATUS "SharedLib config done...\n")
+
+#message(STATUS "CMAKE_PREFIX_PATH:" $ENV{CMAKE_PREFIX_PATH})
