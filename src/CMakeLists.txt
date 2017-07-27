@@ -55,7 +55,7 @@ install(
 )
 install(
 	EXPORT ${CMAKE_PROJECT_NAME}Targets
-	DESTINATION lib/cmake
+	DESTINATION lib/cmake/${CMAKE_PROJECT_NAME}
 )
 install(
 	FILES ${library_hdr}
@@ -65,7 +65,7 @@ install(
 	FILES 
 		${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}Config.cmake
 		${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}ConfigVersion.cmake
-	DESTINATION	lib/cmake 
+	DESTINATION	lib/cmake/${CMAKE_PROJECT_NAME}
 )
 
 # PACKAGE SETUP ###################################################
