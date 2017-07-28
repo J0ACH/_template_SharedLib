@@ -6,12 +6,11 @@
 
 namespace MyNamespace
 {
-	class MyClass : public QWidget
+	class MyClass
 	{
-		Q_OBJECT
 
 	public:
-		MyClass(QWidget *parent = 0);
+		MyClass(int, int);
 		~MyClass();
 	};
 }

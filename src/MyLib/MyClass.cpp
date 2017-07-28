@@ -2,10 +2,12 @@
 
 namespace MyNamespace
 {
-	MyClass::MyClass(QWidget *parent) : QWidget(parent)
+	MyClass::MyClass(int width, int height) 
 	{
 		qDebug("Ma draha Barboro, miluji te");
-		this->show();
+		QWidget *frame = new QWidget(0);
+		frame->setFixedSize(QSize(width, height));
+		frame->show();
 	}
 	MyClass::~MyClass()
 	{
