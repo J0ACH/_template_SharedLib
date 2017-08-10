@@ -5,14 +5,15 @@
       "name": "Debug",
       "generator": "Visual Studio 15 2017 Win64",
       "configurationType": "Debug",
-      "buildRoot": "${projectDir}\\build\\cache\\${name}",
+      "buildRoot": "${projectDir}\\cache\\${name}",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "-m -v:minimal",
       "ctestCommandArgs": "",
       "variables": [
         {
           "name": "CMAKE_INSTALL_PREFIX",
-          "value": "${env.ProgramFiles}\\SharedLib"
+          "value": "${projectDir}\\install"
+          //"value": "${env.ProgramFiles}\\SharedLib"
         }
       ]
 
@@ -21,13 +22,14 @@
       "name": "Release",
       "generator": "Visual Studio 15 2017 Win64",
       "configurationType": "Release",
-      "buildRoot": "${projectDir}\\build\\cache\\${name}",
+      "buildRoot": "${projectDir}\\cache\\${name}",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "-m -v:minimal",
       "ctestCommandArgs": "",
       "variables": [
         {
           "name": "CMAKE_INSTALL_PREFIX",
+          //"value": "${projectDir}\\install"
           "value": "${env.ProgramFiles}\\SharedLib"
         }
       ]

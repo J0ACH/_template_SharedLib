@@ -9,10 +9,15 @@ message(STATUS "SharedLib [${PROJECT_VERSION}] config init...")
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
 set(CMAKE_AUTOMOC ON)
 
-message(STATUS "\t buildDir: ${CMAKE_BINARY_DIR}")
-message(STATUS "\t installDir: ${CMAKE_INSTALL_PREFIX}")
+set(cacheDir ${CMAKE_SOURCE_DIR}/cache)
+set(buildDir ${CMAKE_SOURCE_DIR}/build)
+set(installDir ${CMAKE_SOURCE_DIR}/install)
 
-add_subdirectory(src)
+message(STATUS "\t cacheDir: ${cacheDir}")
+message(STATUS "\t buildDir: ${buildDir}")
+message(STATUS "\t installDir: ${installDir}")
+
+add_subdirectory(source)
 
 #export ( PACKAGE ${CMAKE_PROJECT_NAME} ) 
 

@@ -58,6 +58,28 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
 		${qtLinkLibs}
 )
 
+# PACKAGE SETUP ###################################################
+
+include(CMakePackageConfigHelpers)
+configure_package_config_file (
+	${CMAKE_CURRENT_SOURCE_DIR}/${CMAKE_PROJECT_NAME}Config.cmake.in
+	${buildDir}/cmake/${CMAKE_PROJECT_NAME}Config.cmake
+	INSTALL_DESTINATION lib/cmake
+)
+write_basic_package_version_file(
+	${buildDir}/cmake/${CMAKE_PROJECT_NAME}ConfigVersion.cmake
+	VERSION ${PROJECT_VERSION}
+	COMPATIBILITY AnyNewerVersion 
+)
+#cmake_policy(SET CMP0022 NEW)
+export ( 
+	TARGETS ${CMAKE_PROJECT_NAME}
+	FILE ${buildDir}/cmake/${CMAKE_PROJECT_NAME}Targets.cmake 
+	#FILE ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}Targets.cmake 
+	#EXPORT_LINK_INTERFACE_LIBRARIES
+)
+
+
 # LIB INSTALL ###################################################
 
 install(
@@ -73,16 +95,16 @@ install(
 	DESTINATION include
 )
 install(
+	FILES 
+		${buildDir}/cmake/${CMAKE_PROJECT_NAME}Config.cmake
+		${buildDir}/cmake/${CMAKE_PROJECT_NAME}ConfigVersion.cmake
+	DESTINATION	lib/cmake/${CMAKE_PROJECT_NAME}-${PROJECT_VERSION}
+)
+install(
 	EXPORT ${CMAKE_PROJECT_NAME}Targets
 	DESTINATION lib/cmake/${CMAKE_PROJECT_NAME}-${PROJECT_VERSION}
 	FILE ${CMAKE_PROJECT_NAME}Targets.cmake
 	CONFIGURATIONS Release
-)
-install(
-	FILES 
-		${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}Config.cmake
-		${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}ConfigVersion.cmake
-	DESTINATION	lib/cmake/${CMAKE_PROJECT_NAME}-${PROJECT_VERSION}
 )
 #[[
 install(
@@ -94,25 +116,4 @@ install(
 )
 #]]
 
-# PACKAGE SETUP ###################################################
 
-#[[
-include(CMakePackageConfigHelpers)
-configure_package_config_file (
-	${CMAKE_CURRENT_SOURCE_DIR}/${CMAKE_PROJECT_NAME}Config.cmake.in
-	${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}Config.cmake
-	INSTALL_DESTINATION lib/cmake
-)
-write_basic_package_version_file(
-	${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}ConfigVersion.cmake
-	VERSION ${PROJECT_VERSION}
-	COMPATIBILITY AnyNewerVersion 
-)
-cmake_policy(SET CMP0022 NEW)
-export ( 
-	TARGETS ${CMAKE_PROJECT_NAME}
-	FILE ${CMAKE_BINARY_DIR}/lib/${CMAKE_CONFIGURATION_TYPES}/${CMAKE_PROJECT_NAME}Targets.cmake 
-	#FILE ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}Targets.cmake 
-	EXPORT_LINK_INTERFACE_LIBRARIES
-)
-#]]
