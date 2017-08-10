@@ -25,15 +25,17 @@ message(STATUS "SharedLib config done...\n")
 
 
 # CPACK SETUP ###################################################
-# otevri SharedLib.sln - pMouse - Open dev cmd propmpt - "cpack -G WIX -C Release"
+# otevri PACKAGE.vcxproj - pMouse - Open dev cmd propmpt - "cpack"
 
 if(WIN32)
 	set(CPACK_GENERATOR WIX)
 	set(CPACK_PACKAGE_NAME ${CMAKE_PROJECT_NAME})
 	set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
+	set(CPACK_PACKAGE_DIRECTORY ${buildDir})
 
 	set(CPACK_PACKAGE_INSTALL_DIRECTORY ${CMAKE_PROJECT_NAME})
 	set(CPACK_WIX_UPGRADE_GUID "12725C7F-BB8F-45BA-8616-DEA091488B9D")
+	set(CPACK_WIX_CMAKE_PACKAGE_REGISTRY "SharedLib")
 	
 	include(CPack)
 endif()

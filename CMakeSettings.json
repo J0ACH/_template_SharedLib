@@ -29,8 +29,8 @@
       "variables": [
         {
           "name": "CMAKE_INSTALL_PREFIX",
-          //"value": "${projectDir}\\install"
-          "value": "${env.ProgramFiles}\\SharedLib"
+          "value": "${projectDir}\\install"
+          //"value": "${env.ProgramFiles}\\SharedLib"
         }
       ]
 
