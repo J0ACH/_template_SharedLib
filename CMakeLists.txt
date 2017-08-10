@@ -24,19 +24,19 @@ add_subdirectory(source)
 message(STATUS "SharedLib config done...\n")
 
 
+# CPACK SETUP ###################################################
+# otevri SharedLib.sln - pMouse - Open dev cmd propmpt - "cpack -G WIX -C Release"
+
 if(WIN32)
-	set(CPACK_GENERATOR NSIS)
+	set(CPACK_GENERATOR WIX)
 	set(CPACK_PACKAGE_NAME ${CMAKE_PROJECT_NAME})
-	set(CPACK_PACKAGE_VENDOR "JP")
-	set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "SharedLib - CPack Component Installation Example")
 	set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
-	#set(CPACK_PACKAGE_VERSION_MAJOR "1")
-	#set(CPACK_PACKAGE_VERSION_MINOR "0")
-	#set(CPACK_PACKAGE_VERSION_PATCH "0")
-	set(CPACK_PACKAGE_INSTALL_DIRECTORY "Shared library") # default install folder name C:/ProgramFiles/Shared library
-	set(CPACK_NSIS_MODIFY_PATH ON)
+
+	set(CPACK_PACKAGE_INSTALL_DIRECTORY ${CMAKE_PROJECT_NAME})
+	set(CPACK_WIX_UPGRADE_GUID "12725C7F-BB8F-45BA-8616-DEA091488B9D")
+	
+	include(CPack)
 endif()
-include(CPack)
 
 #[[
 install(CODE 

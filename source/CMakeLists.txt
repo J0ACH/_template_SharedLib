@@ -71,14 +71,10 @@ write_basic_package_version_file(
 	VERSION ${PROJECT_VERSION}
 	COMPATIBILITY AnyNewerVersion 
 )
-#cmake_policy(SET CMP0022 NEW)
 export ( 
 	TARGETS ${CMAKE_PROJECT_NAME}
 	FILE ${buildDir}/cmake/${CMAKE_PROJECT_NAME}Targets.cmake 
-	#FILE ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}Targets.cmake 
-	#EXPORT_LINK_INTERFACE_LIBRARIES
 )
-
 
 # LIB INSTALL ###################################################
 
