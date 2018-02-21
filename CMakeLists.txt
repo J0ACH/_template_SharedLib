@@ -1,4 +1,4 @@
-cmake_minimum_required( VERSION 3.8 )
+cmake_minimum_required (VERSION 3.8.2)
 cmake_policy(SET CMP0048 NEW)
 project (SharedLib VERSION 0.3.0)
 
@@ -19,7 +19,7 @@ message(STATUS "\t CMAKE_CONFIGURATION_TYPES : " ${CMAKE_CONFIGURATION_TYPES})
 
 add_subdirectory(source)
 
-export ( PACKAGE ${CMAKE_PROJECT_NAME} ) 
+#export ( PACKAGE ${CMAKE_PROJECT_NAME} ) 
 
 message(STATUS "${CMAKE_PROJECT_NAME} config done...\n")
 
@@ -27,6 +27,7 @@ message(STATUS "${CMAKE_PROJECT_NAME} config done...\n")
 # CPACK SETUP ###################################################
 # otevri PACKAGE.vcxproj - pMouse - Open dev cmd propmpt - "cpack"
 
+#[[
 if(WIN32)
 	set(CPACK_GENERATOR WIX)
 	set(CPACK_PACKAGE_NAME ${CMAKE_PROJECT_NAME})
@@ -40,7 +41,6 @@ if(WIN32)
 	include(CPack)
 endif()
 
-#[[
 install(CODE 
 	"execute_process (
 		COMMAND cpack --config CPackConfig.cmake

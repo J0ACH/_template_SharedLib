@@ -1,14 +1,19 @@
 
-SET(library_hdr
-	${CMAKE_CURRENT_LIST_DIR}/MyClass.h
-	PARENT_SCOPE
+target_sources(${CMAKE_PROJECT_NAME}
+	PRIVATE 
+		${CMAKE_CURRENT_LIST_DIR}/MyClass.cpp
+	PUBLIC
+		${CMAKE_CURRENT_LIST_DIR}/MyClass.h	
 )
 
-SET(library_src
-	${CMAKE_CURRENT_LIST_DIR}/MyClass.cpp
-	PARENT_SCOPE
+target_include_directories(${CMAKE_PROJECT_NAME} 
+	PRIVATE 
+		${CMAKE_CURRENT_LIST_DIR}
+	INTERFACE
+		$<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/include>
+		$<INSTALL_INTERFACE:${PROJECT_NAME}_${PROJECT_VERSION}/include>
 )
 
-SET(library_res
-	PARENT_SCOPE
-)
+
+get_target_property(print_INTERFACE_SOURCES SharedLib INTERFACE_SOURCES) 
+message(STATUS "\t print_INTERFACE_SOURCES: " ${print_INTERFACE_SOURCES})

@@ -3,13 +3,9 @@
 
 find_package(Qt5 COMPONENTS Core Gui Widgets REQUIRED)
 
-add_subdirectory(MyLib)
+add_library( ${CMAKE_PROJECT_NAME} SHARED "")
 
-add_library( ${CMAKE_PROJECT_NAME} SHARED
-	${library_hdr}
-	${library_src}
-	${library_res}
-)
+add_subdirectory(MyLib)
 
 string(TOUPPER ${CMAKE_CONFIGURATION_TYPES} configType)
 set_target_properties( ${CMAKE_PROJECT_NAME}
@@ -20,42 +16,17 @@ set_target_properties( ${CMAKE_PROJECT_NAME}
 		DEBUG_POSTFIX d
 )
 
+target_link_libraries(${CMAKE_PROJECT_NAME} 
+	PRIVATE
+		Qt5::Core
+		Qt5::Gui
+		Qt5::Widgets
+)
+
 add_custom_command(TARGET ${CMAKE_PROJECT_NAME}
 	POST_BUILD
 		COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/include
-		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${library_hdr} ${CMAKE_BINARY_DIR}/include
-)
-
-get_target_property(qtCoreInclude Qt5::Core INTERFACE_INCLUDE_DIRECTORIES) 
-get_target_property(qtGuiInclude Qt5::Gui INTERFACE_INCLUDE_DIRECTORIES) 
-get_target_property(qtWidgetsInclude Qt5::Widgets INTERFACE_INCLUDE_DIRECTORIES) 
-list(APPEND qtIncludeDirs ${qtCoreInclude})
-list(APPEND qtIncludeDirs ${qtGuiInclude})
-list(APPEND qtIncludeDirs ${qtWidgetsInclude})
-list(REMOVE_DUPLICATES qtIncludeDirs)
-
-target_include_directories(${CMAKE_PROJECT_NAME} 
-	PRIVATE
-		${library_hdr}	
-	PUBLIC
-		${qtIncludeDirs}
-	INTERFACE 
-		$<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/include>
-		$<INSTALL_INTERFACE:include>
-)
-
-get_target_property(qtCoreLib Qt5::Core IMPORTED_IMPLIB_RELEASE) 
-get_target_property(qtGuiLib Qt5::Gui IMPORTED_IMPLIB_RELEASE) 
-get_target_property(qtWidgetsLib Qt5::Widgets IMPORTED_IMPLIB_RELEASE) 
-get_target_property(qtWinMainLib Qt5::WinMain IMPORTED_LOCATION_RELEASE) 
-list(APPEND qtLinkLibs ${qtCoreLib})
-list(APPEND qtLinkLibs ${qtGuiLib})
-list(APPEND qtLinkLibs ${qtWidgetsLib})
-list(APPEND qtLinkLibs ${qtWinMainLib})
-
-target_link_libraries(${CMAKE_PROJECT_NAME} 
-	PUBLIC
-		${qtLinkLibs}
+		COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_PROPERTY:SharedLib,INTERFACE_SOURCES> ${CMAKE_BINARY_DIR}/include
 )
 
 # PACKAGE SETUP ###################################################
@@ -80,6 +51,7 @@ export (
 
 # LIB INSTALL ###################################################
 
+#[[
 install(
 	TARGETS ${CMAKE_PROJECT_NAME} 
 	EXPORT ${CMAKE_PROJECT_NAME}Targets
@@ -104,6 +76,9 @@ install(
 	FILE ${CMAKE_PROJECT_NAME}Targets.cmake
 	CONFIGURATIONS Release
 )
+#]]
+
+
 #[[
 install(
 	FILES 
