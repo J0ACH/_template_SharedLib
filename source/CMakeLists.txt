@@ -14,16 +14,16 @@ add_library( ${CMAKE_PROJECT_NAME} SHARED
 string(TOUPPER ${CMAKE_CONFIGURATION_TYPES} configType)
 set_target_properties( ${CMAKE_PROJECT_NAME}
     PROPERTIES
-		ARCHIVE_OUTPUT_DIRECTORY_${configType} ${buildDir}/lib
-		LIBRARY_OUTPUT_DIRECTORY_${configType} ${buildDir}/lib
-		RUNTIME_OUTPUT_DIRECTORY_${configType} ${buildDir}/bin
-		DEBUG_POSTFIX _d
+		ARCHIVE_OUTPUT_DIRECTORY_${configType} ${CMAKE_BINARY_DIR}/lib
+		LIBRARY_OUTPUT_DIRECTORY_${configType} ${CMAKE_BINARY_DIR}/lib
+		RUNTIME_OUTPUT_DIRECTORY_${configType} ${CMAKE_BINARY_DIR}/bin
+		DEBUG_POSTFIX d
 )
 
 add_custom_command(TARGET ${CMAKE_PROJECT_NAME}
 	POST_BUILD
-		COMMAND ${CMAKE_COMMAND} -E make_directory ${buildDir}/include
-		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${library_hdr} ${buildDir}/include
+		COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/include
+		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${library_hdr} ${CMAKE_BINARY_DIR}/include
 )
 
 get_target_property(qtCoreInclude Qt5::Core INTERFACE_INCLUDE_DIRECTORIES) 
@@ -40,7 +40,7 @@ target_include_directories(${CMAKE_PROJECT_NAME}
 	PUBLIC
 		${qtIncludeDirs}
 	INTERFACE 
-		$<BUILD_INTERFACE:${buildDir}/include>
+		$<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/include>
 		$<INSTALL_INTERFACE:include>
 )
 
@@ -63,17 +63,19 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
 include(CMakePackageConfigHelpers)
 configure_package_config_file (
 	${CMAKE_CURRENT_SOURCE_DIR}/${CMAKE_PROJECT_NAME}Config.cmake.in
-	${buildDir}/cmake/${CMAKE_PROJECT_NAME}Config.cmake
-	INSTALL_DESTINATION lib/cmake
+	${CMAKE_BINARY_DIR}/cmake/${CMAKE_PROJECT_NAME}Config.cmake
+	INSTALL_DESTINATION ${PROJECT_NAME}_${PROJECT_VERSION}/cmake
 )
 write_basic_package_version_file(
-	${buildDir}/cmake/${CMAKE_PROJECT_NAME}ConfigVersion.cmake
+	${CMAKE_BINARY_DIR}/cmake/${CMAKE_PROJECT_NAME}ConfigVersion.cmake
 	VERSION ${PROJECT_VERSION}
 	COMPATIBILITY AnyNewerVersion 
 )
+cmake_policy(SET CMP0022 NEW)
 export ( 
 	TARGETS ${CMAKE_PROJECT_NAME}
-	FILE ${buildDir}/cmake/${CMAKE_PROJECT_NAME}Targets.cmake 
+	FILE ${CMAKE_BINARY_DIR}/cmake/${CMAKE_PROJECT_NAME}Targets-${CMAKE_CONFIGURATION_TYPES}.cmake 
+	EXPORT_LINK_INTERFACE_LIBRARIES
 )
 
 # LIB INSTALL ###################################################
@@ -92,8 +94,8 @@ install(
 )
 install(
 	FILES 
-		${buildDir}/cmake/${CMAKE_PROJECT_NAME}Config.cmake
-		${buildDir}/cmake/${CMAKE_PROJECT_NAME}ConfigVersion.cmake
+		${CMAKE_BINARY_DIR}/cmake/${CMAKE_PROJECT_NAME}Config.cmake
+		${CMAKE_BINARY_DIR}/cmake/${CMAKE_PROJECT_NAME}ConfigVersion.cmake
 	DESTINATION	lib/cmake/${CMAKE_PROJECT_NAME}-${PROJECT_VERSION}
 )
 install(
