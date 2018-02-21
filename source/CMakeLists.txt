@@ -10,7 +10,6 @@ add_library( ${CMAKE_PROJECT_NAME} SHARED
 	${library_src}
 )
 
-
 string(TOUPPER ${CMAKE_CONFIGURATION_TYPES} configType)
 set_target_properties( ${CMAKE_PROJECT_NAME}
     PROPERTIES
