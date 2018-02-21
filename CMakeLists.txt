@@ -19,7 +19,7 @@ message(STATUS "\t CMAKE_CONFIGURATION_TYPES : " ${CMAKE_CONFIGURATION_TYPES})
 
 add_subdirectory(source)
 
-#export ( PACKAGE ${CMAKE_PROJECT_NAME} ) 
+export ( PACKAGE ${CMAKE_PROJECT_NAME} ) 
 
 message(STATUS "${CMAKE_PROJECT_NAME} config done...\n")
 

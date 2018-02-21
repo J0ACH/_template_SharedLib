@@ -26,14 +26,22 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
 add_custom_command(TARGET ${CMAKE_PROJECT_NAME}
 	POST_BUILD
 		COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/include
+		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${library_hdr} ${CMAKE_BINARY_DIR}/include
+)
+
+#[[
+add_custom_command(TARGET ${CMAKE_PROJECT_NAME}
+	PRE_BUILD
+		COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/include
 		COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_PROPERTY:SharedLib,INTERFACE_SOURCES> ${CMAKE_BINARY_DIR}/include
 )
+#]]
 
 # PACKAGE SETUP ###################################################
 
 include(CMakePackageConfigHelpers)
 configure_package_config_file (
-	${CMAKE_CURRENT_SOURCE_DIR}/${CMAKE_PROJECT_NAME}Config.cmake.in
+	${CMAKE_CURRENT_LIST_DIR}/${CMAKE_PROJECT_NAME}Config.cmake.in
 	${CMAKE_BINARY_DIR}/cmake/${CMAKE_PROJECT_NAME}Config.cmake
 	INSTALL_DESTINATION ${PROJECT_NAME}_${PROJECT_VERSION}/cmake
 )
@@ -51,42 +59,28 @@ export (
 
 # LIB INSTALL ###################################################
 
-#[[
 install(
 	TARGETS ${CMAKE_PROJECT_NAME} 
 	EXPORT ${CMAKE_PROJECT_NAME}Targets
-	ARCHIVE DESTINATION lib
-    LIBRARY DESTINATION lib
-	RUNTIME DESTINATION bin
-	CONFIGURATIONS Release
+	ARCHIVE DESTINATION ${PROJECT_NAME}_${PROJECT_VERSION}/lib
+    LIBRARY DESTINATION ${PROJECT_NAME}_${PROJECT_VERSION}/lib
+	RUNTIME DESTINATION ${PROJECT_NAME}_${PROJECT_VERSION}/bin
+	#CONFIGURATIONS Release
 )
 install(
+	#FILES $<TARGET_PROPERTY:SharedLib,INTERFACE_SOURCES>
 	FILES ${library_hdr}
-	DESTINATION include
+	DESTINATION ${PROJECT_NAME}_${PROJECT_VERSION}/include
 )
 install(
-	FILES 
+	FILES
 		${CMAKE_BINARY_DIR}/cmake/${CMAKE_PROJECT_NAME}Config.cmake
 		${CMAKE_BINARY_DIR}/cmake/${CMAKE_PROJECT_NAME}ConfigVersion.cmake
-	DESTINATION	lib/cmake/${CMAKE_PROJECT_NAME}-${PROJECT_VERSION}
+	DESTINATION	${PROJECT_NAME}_${PROJECT_VERSION}/cmake
 )
 install(
 	EXPORT ${CMAKE_PROJECT_NAME}Targets
-	DESTINATION lib/cmake/${CMAKE_PROJECT_NAME}-${PROJECT_VERSION}
+	DESTINATION ${PROJECT_NAME}_${PROJECT_VERSION}/cmake
 	FILE ${CMAKE_PROJECT_NAME}Targets.cmake
-	CONFIGURATIONS Release
 )
-#]]
-
-
-#[[
-install(
-	FILES 
-		$<TARGET_FILE:Qt5::Core>
-		$<TARGET_FILE:Qt5::Gui>
-		$<TARGET_FILE:Qt5::Widgets>
-	DESTINATION bin
-)
-#]]
-
 
