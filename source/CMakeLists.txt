@@ -3,9 +3,13 @@
 
 find_package(Qt5 COMPONENTS Core Gui Widgets REQUIRED)
 
-add_library( ${CMAKE_PROJECT_NAME} SHARED "")
-
 add_subdirectory(MyLib)
+
+add_library( ${CMAKE_PROJECT_NAME} SHARED 
+	${library_hdr}
+	${library_src}
+)
+
 
 string(TOUPPER ${CMAKE_CONFIGURATION_TYPES} configType)
 set_target_properties( ${CMAKE_PROJECT_NAME}
@@ -21,6 +25,14 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
 		Qt5::Core
 		Qt5::Gui
 		Qt5::Widgets
+)
+
+target_include_directories(${CMAKE_PROJECT_NAME} 
+	PRIVATE 
+		${CMAKE_CURRENT_LIST_DIR}/MyLib
+	INTERFACE
+		$<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/include>
+		$<INSTALL_INTERFACE:${PROJECT_NAME}_${PROJECT_VERSION}/include>
 )
 
 add_custom_command(TARGET ${CMAKE_PROJECT_NAME}

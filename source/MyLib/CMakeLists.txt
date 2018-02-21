@@ -26,13 +26,7 @@ target_sources(${CMAKE_PROJECT_NAME}
 )
 #]]
 
-target_include_directories(${CMAKE_PROJECT_NAME} 
-	PRIVATE 
-		${CMAKE_CURRENT_LIST_DIR}
-	INTERFACE
-		$<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/include>
-		$<INSTALL_INTERFACE:${PROJECT_NAME}_${PROJECT_VERSION}/include>
-)
+
 
 #[[
 get_target_property(print_SOURCES SharedLib SOURCES) 
