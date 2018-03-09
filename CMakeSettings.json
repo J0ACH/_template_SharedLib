@@ -1,40 +1,79 @@
 {
   // See https://go.microsoft.com//fwlink//?linkid=834763 for more information about this file.
+
+  "environments": [
+    { "BuildDir": "${projectDir}\\build" },
+    { "InstallDir": "${projectDir}\\install" }
+  ],
+
   "configurations": [
     {
       "name": "x64-Debug",
-      "generator": "Visual Studio 15 2017 Win64",
+      "generator": "Visual Studio 15 2017",
       "configurationType": "Debug",
-      "buildRoot": "${projectDir}\\build",
+      "inheritEnvironments": [ "msvc_x64" ],
+      "buildRoot": "${env.BuildDir}\\${name}",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "-m -v:minimal",
       "ctestCommandArgs": "",
       "variables": [
         {
           "name": "CMAKE_INSTALL_PREFIX",
-          "value": "${projectDir}\\install"
-          //"value": "${env.ProgramFiles}\\SharedLib"
+          "value": "${env.InstallDir}"
+        },
+        {
+          "name": "CMAKE_PREFIX_PATH",
+          "value": "C:\\Qt\\5.10.0\\msvc2017_64"
         }
       ]
-
     },
     {
       "name": "x64-Release",
-      "generator": "Visual Studio 15 2017 Win64",
+      "generator": "Visual Studio 15 2017",
       "configurationType": "Release",
-      "buildRoot": "${projectDir}\\build",
+      "inheritEnvironments": [ "msvc_x64" ],
+      "buildRoot": "${env.BuildDir}\\${name}",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "-m -v:minimal",
       "ctestCommandArgs": "",
       "variables": [
         {
           "name": "CMAKE_INSTALL_PREFIX",
-          "value": "${projectDir}\\install"
-          //"value": "${env.ProgramFiles}\\SharedLib"
+          "value": "${env.InstallDir}"
         }
       ]
-
-
+    },
+    {
+      "name": "x86-Debug",
+      "generator": "Visual Studio 15 2017",
+      "configurationType": "Debug",
+      "inheritEnvironments": [ "msvc_x86" ],
+      "buildRoot": "${env.BuildDir}\\${name}",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-m -v:minimal",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "CMAKE_INSTALL_PREFIX",
+          "value": "${env.InstallDir}"
+        }
+      ]
+    },
+    {
+      "name": "x86-Debug",
+      "generator": "Visual Studio 15 2017",
+      "configurationType": "Debug",
+      "inheritEnvironments": [ "msvc_x86" ],
+      "buildRoot": "${env.BuildDir}\\${name}",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-m -v:minimal",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "CMAKE_INSTALL_PREFIX",
+          "value": "${env.InstallDir}"
+        }
+      ]
     }
   ]
 }
